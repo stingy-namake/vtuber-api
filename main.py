@@ -12,7 +12,7 @@ load_dotenv()
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 ANON_KEY = os.getenv("SUPABASE_ANON_KEY")
-TABLE = os.getenv("TABLE_VTUBERS", "vtubers")  # Changed table name
+TABLE = os.getenv("TABLE_VTUBERS", "vtubers")
 POSTGREST_URL = f"{SUPABASE_URL}/rest/v1"
 
 if not SUPABASE_URL or not ANON_KEY:
@@ -67,6 +67,9 @@ class VTuberOut(BaseModel):
     created_at: str
     updated_at: str
 
+class VTuberBulkCreate(BaseModel):
+    vtubers: List[VTuberCreate]
+
 # Authentication dependencies
 async def get_user_token(authorization: Optional[str] = Header(default=None)):
     """Required for write operations"""
@@ -104,6 +107,8 @@ async def root():
             ],
             "protected": [
                 "POST /vtubers - Create new VTuber (requires auth)",
+                "POST /vtubers/bulk - Create multiple VTubers (requires auth)",
+                "POST /vtubers/batch - Create multiple VTubers (direct array) (requires auth)",
                 "PUT /vtubers/{id} - Update VTuber (requires auth)",
                 "DELETE /vtubers/{id} - Delete VTuber (requires auth)"
             ]
@@ -224,6 +229,38 @@ async def create_vtuber(payload: VTuberCreate, auth=Depends(get_user_token)):
     if r.status_code >= 400:
         raise HTTPException(r.status_code, r.text)
     return r.json()
+
+@app.post("/vtubers/bulk", response_model=List[VTuberOut], status_code=201)
+async def create_vtubers_bulk(payload: VTuberBulkCreate, auth=Depends(get_user_token)):
+    """Create multiple VTubers in bulk (requires authentication)"""
+    async with httpx.AsyncClient(timeout=30) as client:
+        results = []
+        for vtuber_data in payload.vtubers:
+            r = await client.post(
+                f"{POSTGREST_URL}/{TABLE}",
+                headers=postgrest_headers(auth),
+                json=vtuber_data.model_dump(mode="json")
+            )
+            if r.status_code >= 400:
+                continue
+            results.extend(r.json())
+        return results
+
+@app.post("/vtubers/batch", response_model=List[VTuberOut], status_code=201)
+async def create_vtubers_batch(vtubers: List[VTuberCreate], auth=Depends(get_user_token)):
+    """Create multiple VTubers in batch (direct array format) (requires authentication)"""
+    async with httpx.AsyncClient(timeout=30) as client:
+        results = []
+        for vtuber_data in vtubers:
+            r = await client.post(
+                f"{POSTGREST_URL}/{TABLE}",
+                headers=postgrest_headers(auth),
+                json=vtuber_data.model_dump(mode="json")
+            )
+            if r.status_code >= 400:
+                continue
+            results.extend(r.json())
+        return results
 
 @app.put("/vtubers/{vtuber_id}", response_model=List[VTuberOut])
 async def update_vtuber(vtuber_id: UUID, payload: VTuberUpdate, auth=Depends(get_user_token)):
