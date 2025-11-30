@@ -1,0 +1,448 @@
+{
+	"info": {
+		"_postman_id": "580a2e31-0f08-41d8-9503-059dda04f38c",
+		"name": "VTuber Wiki API",
+		"description": "Vtuber Wiki Full API (FastAPI + Supabase) -  \n\\- GET: PUBLIC  \n\\- POST/PUT/DELETE: PROTECTED",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39663045",
+		"_collection_link": "https://api333-0880.postman.co/workspace/Vtuber-Wiki~4f1d9639-200e-4bb8-921b-91dcb83b0e1c/collection/39663045-580a2e31-0f08-41d8-9503-059dda04f38c?action=share&source=collection_link&creator=39663045"
+	},
+	"item": [
+		{
+			"name": "API Root",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api_url}}/",
+					"host": [
+						"{{api_url}}"
+					],
+					"path": [
+						""
+					]
+				},
+				"description": "Documentação da API e endpoints disponíveis"
+			},
+			"response": []
+		},
+		{
+			"name": "Health Check",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api_url}}/health",
+					"host": [
+						"{{api_url}}"
+					],
+					"path": [
+						"health"
+					]
+				},
+				"description": "Verifica se a API está funcionando"
+			},
+			"response": []
+		},
+		{
+			"name": "List All VTubers (Public)",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api_url}}/vtubers?limit=50&offset=0&sort_by=name",
+					"host": [
+						"{{api_url}}"
+					],
+					"path": [
+						"vtubers"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "50"
+						},
+						{
+							"key": "offset",
+							"value": "0",
+							"description": "Pagination offset"
+						},
+						{
+							"key": "sort_by",
+							"value": "name"
+						},
+						{
+							"key": "agency",
+							"value": "",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Lista todos os VTubers (endpoint público - não requer autenticação)"
+			},
+			"response": []
+		},
+		{
+			"name": "Get VTuber by ID (Public)",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api_url}}/vtubers/{{vtuber_id}}",
+					"host": [
+						"{{api_url}}"
+					],
+					"path": [
+						"vtubers",
+						"{{vtuber_id}}"
+					]
+				},
+				"description": "Busca um VTuber específico por ID (endpoint público)"
+			},
+			"response": []
+		},
+		{
+			"name": "Search VTubers (Public)",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api_url}}/search?q=gura&limit=20",
+					"host": [
+						"{{api_url}}"
+					],
+					"path": [
+						"search"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "gura",
+							"description": "Search term"
+						},
+						{
+							"key": "limit",
+							"value": "20"
+						}
+					]
+				},
+				"description": "Busca VTubers por nome ou descrição (endpoint público)"
+			},
+			"response": []
+		},
+		{
+			"name": "List Agencies (Public)",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api_url}}/agencies",
+					"host": [
+						"{{api_url}}"
+					],
+					"path": [
+						"agencies"
+					]
+				},
+				"description": "Lista todas as agências disponíveis (endpoint público)"
+			},
+			"response": []
+		},
+		{
+			"name": "Filter by Agency (Public)",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api_url}}/vtubers?agency=hololive&limit=30",
+					"host": [
+						"{{api_url}}"
+					],
+					"path": [
+						"vtubers"
+					],
+					"query": [
+						{
+							"key": "agency",
+							"value": "hololive",
+							"description": "Filter by agency"
+						},
+						{
+							"key": "limit",
+							"value": "30"
+						}
+					]
+				},
+				"description": "Lista VTubers filtrados por agência (endpoint público)"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Single VTuber (Protected)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Salva o ID do VTuber criado para usar em outras requisições",
+							"if (pm.response.code === 201) {",
+							"    const response = pm.response.json();",
+							"    if (response && response.length > 0) {",
+							"        pm.environment.set('vtuber_id', response[0].id);",
+							"        console.log('vtuber_id salvo:', response[0].id);",
+							"    }",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Gawr Gura\",\n    \"agency\": \"hololive English\",\n    \"debut_date\": \"2020-09-13\",\n    \"description\": \"A descendant of the Lost City of Atlantis, who swam to Earth while saying, 'It's so boring down there LOLOLOL!'\",\n    \"image_url\": \"https://example.com/gura.jpg\",\n    \"youtube_channel\": \"UCQ0UDLQCjY0rmuxCDE38FGg\",\n    \"twitter_handle\": \"gawrgura\",\n    \"tags\": [\"hololive\", \"english\", \"shark\", \"gaming\"]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}/vtubers",
+					"host": [
+						"{{api_url}}"
+					],
+					"path": [
+						"vtubers"
+					]
+				},
+				"description": "Cria um novo VTuber (requer autenticação - use o token do Supabase)"
+			},
+			"response": []
+		},
+		{
+			"name": "Bulk Create VTubers (Wrapped Array)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"vtubers\": [\n  {\n    \"name\": \"Neuro-sama\",\n    \"agency\": \"VShojo\",\n    \"debut_date\": \"2022-12-21\",\n    \"description\": \"An AI VTuber known for her advanced conversational abilities and playing games in real-time\",\n    \"image_url\": \"https://twitter.com/Neuro_sama/profile_image?size=original\",\n    \"youtube_channel\": \"@Neuro-sama\",\n    \"twitter_handle\": \"Neuro_sama\",\n    \"tags\": [\"vshojo\", \"ai\", \"gaming\", \"english\"]\n  },\n  {\n    \"name\": \"Camila\",\n    \"agency\": \"Mythic Talent\",\n    \"debut_date\": \"2022-07-10\",\n    \"description\": \"A silly and mischievous pink-haired imp who is a kind demon at heart\",\n    \"image_url\": \"https://twitter.com/cumilq/profile_image?size=original\",\n    \"youtube_channel\": \"@camila\",\n    \"twitter_handle\": \"cumilq\",\n    \"tags\": [\"mythic\", \"english\", \"imp\", \"variety\"]\n  },\n  {\n    \"name\": \"dooby3D\",\n    \"agency\": \"Independent\",\n    \"debut_date\": \"2024-10-25\",\n    \"description\": \"A jerboa (desert mouse) transformed into a humanoid train conductor after being struck by a shooting star\",\n    \"image_url\": \"https://twitter.com/dooby3D/profile_image?size=original\",\n    \"youtube_channel\": \"@dooby3D\",\n    \"twitter_handle\": \"dooby3D\",\n    \"tags\": [\"independent\", \"english\", \"jerboa\", \"gaming\"]\n  },\n  {\n    \"name\": \"Sameko Saba\",\n    \"agency\": \"Independent\",\n    \"debut_date\": \"2025-06-28\",\n    \"description\": \"A whimsical fish girl and lighthouse keeper. Set record for fastest VTuber to reach 1 million subscribers\",\n    \"image_url\": \"https://twitter.com/samekosaba/profile_image?size=original\",\n    \"youtube_channel\": \"@samekosaba\",\n    \"twitter_handle\": \"samekosaba\",\n    \"tags\": [\"independent\", \"english\", \"fish\", \"lighthouse\"]\n  },\n  {\n    \"name\": \"Filian\",\n    \"agency\": \"Independent\",\n    \"debut_date\": \"2021-06-16\",\n    \"description\": \"A cat-ered VTuber known for high-energy humor, variety gaming, and creative content\",\n    \"image_url\": \"https://twitter.com/Filian/profile_image?size=original\",\n    \"youtube_channel\": \"@Filian\",\n    \"twitter_handle\": \"Filian\",\n    \"tags\": [\"independent\", \"english\", \"cat\", \"variety\"]\n  },\n  {\n    \"name\": \"Mori Calliope\",\n    \"agency\": \"hololive English\",\n    \"debut_date\": \"2020-09-12\",\n    \"description\": \"The Reaper's Apprentice and a talented rapper and musician from the underworld\",\n    \"image_url\": \"https://twitter.com/moricalliope/profile_image?size=original\",\n    \"youtube_channel\": \"@MoriCalliope\",\n    \"twitter_handle\": \"moricalliope\",\n    \"tags\": [\"hololive\", \"english\", \"reaper\", \"music\"]\n  },\n  {\n    \"name\": \"Ninomae Ina'nis\",\n    \"agency\": \"hololive English\",\n    \"debut_date\": \"2020-09-12\",\n    \"description\": \"A gentle priestess of the Ancient Ones, an artist known for her calm takodachi community\",\n    \"image_url\": \"https://twitter.com/ninomaeinanis/profile_image?size=original\",\n    \"youtube_channel\": \"@NinomaeInanis\",\n    \"twitter_handle\": \"ninomaeinanis\",\n    \"tags\": [\"hololive\", \"english\", \"tako\", \"art\"]\n  },\n  {\n    \"name\": \"Takanashi Kiara\",\n    \"agency\": \"hololive English\",\n    \"debut_date\": \"2020-09-12\",\n    \"description\": \"A phoenix who owns a fast-food chain, fluent in English, German, and Japanese\",\n    \"image_url\": \"https://twitter.com/takanashikiara/profile_image?size=original\",\n    \"youtube_channel\": \"@TakanashiKiara\",\n    \"twitter_handle\": \"takanashikiara\",\n    \"tags\": [\"hololive\", \"english\", \"phoenix\", \"idol\"]\n  },\n  {\n    \"name\": \"Amelia Watson\",\n    \"agency\": \"hololive English\",\n    \"debut_date\": \"2020-09-13\",\n    \"description\": \"A detective from a timeline, a time-traveler who investigates mysteries and plays games\",\n    \"image_url\": \"https://twitter.com/watsonameliaEN/profile_image?size=original\",\n    \"youtube_channel\": \"@WatsonAmelia\",\n    \"twitter_handle\": \"watsonameliaEN\",\n    \"tags\": [\"hololive\", \"english\", \"detective\", \"gaming\"]\n  },\n  {\n    \"name\": \"Shirakami Fubuki\",\n    \"agency\": \"hololive Japan\",\n    \"debut_date\": \"2018-06-01\",\n    \"description\": \"A friend-making fox, one of hololive's most recognizable and outgoing members\",\n    \"image_url\": \"https://twitter.com/shirakamifubuki/profile_image?size=original\",\n    \"youtube_channel\": \"@ShirakamiFubuki\",\n    \"twitter_handle\": \"shirakamifubuki\",\n    \"tags\": [\"hololive\", \"japanese\", \"fox\", \"gaming\"]\n  },\n  {\n    \"name\": \"Houshou Marine\",\n    \"agency\": \"hololive Japan\",\n    \"debut_date\": \"2020-08-01\",\n    \"description\": \"The Horny Captain, an otaku known for her love of anime, manga, and energetic personality\",\n    \"image_url\": \"https://twitter.com/houshoumarine/profile_image?size=original\",\n    \"youtube_channel\": \"@houshoumarine\",\n    \"twitter_handle\": \"houshoumarine\",\n    \"tags\": [\"hololive\", \"japanese\", \"pirate\", \"idol\"]\n  },\n  {\n    \"name\": \"Kizuna AI\",\n    \"agency\": \"Kizuna AI Inc.\",\n    \"debut_date\": \"2016-11-29\",\n    \"description\": \"The Original VTuber who popularized the concept, a super AI wanting to connect with everyone\",\n    \"image_url\": \"https://twitter.com/aichan_nel/profile_image?size=original\",\n    \"youtube_channel\": \"@AIChannel\",\n    \"twitter_handle\": \"aichan_nel\",\n    \"tags\": [\"kizuna ai\", \"japanese\", \"ai\", \"pioneer\"]\n  },\n  {\n    \"name\": \"Kaguya Luna\",\n    \"agency\": \"Independent\",\n    \"debut_date\": \"2017-12-04\",\n    \"description\": \"One of the early pioneering VTubers, known for her hyperactive personality and iconic green pigtails\",\n    \"image_url\": \"https://twitter.com/kaguyalunach/profile_image?size=original\",\n    \"youtube_channel\": \"@kaguyalunach\",\n    \"twitter_handle\": \"kaguyalunach\",\n    \"tags\": [\"independent\", \"japanese\", \"pioneer\"]\n  },\n  {\n    \"name\": \"Ironmouse\",\n    \"agency\": \"VShojo\",\n    \"debut_date\": \"2020-07-13\",\n    \"description\": \"A charismatic demon queen from Chile, one of the most subscribed-to VTubers on Twitch\",\n    \"image_url\": \"https://twitter.com/ironmouse/profile_image?size=original\",\n    \"youtube_channel\": \"@Ironmouse\",\n    \"twitter_handle\": \"ironmouse\",\n    \"tags\": [\"vshojo\", \"english\", \"demon\", \"singing\"]\n  },\n  {\n    \"name\": \"Veibae\",\n    \"agency\": \"VShojo\",\n    \"debut_date\": \"2020-10-01\",\n    \"description\": \"A succubus known for her sarcastic, dry humor and distinctive voice\",\n    \"image_url\": \"https://twitter.com/Veibae/profile_image?size=original\",\n    \"youtube_channel\": \"@Veibae\",\n    \"twitter_handle\": \"Veibae\",\n    \"tags\": [\"vshojo\", \"english\", \"succubus\", \"art\"]\n  },\n  {\n    \"name\": \"Nyatasha Nyanners\",\n    \"agency\": \"VShojo\",\n    \"debut_date\": \"2020-07-13\",\n    \"description\": \"A cat girl known for her cute voice, singing, and long history in online content creation\",\n    \"image_url\": \"https://twitter.com/NyatashaNyanners/profile_image?size=original\",\n    \"youtube_channel\": \"@Nyanners\",\n    \"twitter_handle\": \"NyatashaNyanners\",\n    \"tags\": [\"vshojo\", \"english\", \"cat\", \"singing\"]\n  },\n  {\n    \"name\": \"Shylily\",\n    \"agency\": \"Independent\",\n    \"debut_date\": \"2021-10-29\",\n    \"description\": \"A lively orca-girl hybrid, known for her high-energy streams and strong community interaction\",\n    \"image_url\": \"https://twitter.com/shylily_/profile_image?size=original\",\n    \"youtube_channel\": \"@Shylily\",\n    \"twitter_handle\": \"shylily_\",\n    \"tags\": [\"independent\", \"english\", \"orca\", \"variety\"]\n  },\n  {\n    \"name\": \"Pikamee\",\n    \"agency\": \"VOMS\",\n    \"debut_date\": \"2019-10-03\",\n    \"description\": \"A beloved kettle-headed student, known for her infectious laughter and cheerful personality\",\n    \"image_url\": \"https://twitter.com/Pikamee_VOMs/profile_image?size=original\",\n    \"youtube_channel\": \"@Pikamee\",\n    \"twitter_handle\": \"Pikamee_VOMs\",\n    \"tags\": [\"voms\", \"japanese\", \"english\", \"kettle\"]\n  },\n  {\n    \"name\": \"Henya the Genius\",\n    \"agency\": \"VShojo\",\n    \"debut_date\": \"2024-01-20\",\n    \"description\": \"A self-proclaimed genius and the Number 1 VTuber, known for singing and comedic timing\",\n    \"image_url\": \"https://twitter.com/henyathegenius/profile_image?size=original\",\n    \"youtube_channel\": \"@HeynaTheGenius\",\n    \"twitter_handle\": \"henyathegenius\",\n    \"tags\": [\"vshojo\", \"english\", \"genius\", \"singing\"]\n  },\n  {\n    \"name\": \"Kobo Kanaeru\",\n    \"agency\": \"hololive Indonesia\",\n    \"debut_date\": \"2022-03-27\",\n    \"description\": \"A rainy shrine maiden and a loud, energetic, and chaotic rain shaman\",\n    \"image_url\": \"https://twitter.com/kobokanaeru/profile_image?size=original\",\n    \"youtube_channel\": \"@KoboKanaeru\",\n    \"twitter_handle\": \"kobokanaeru\",\n    \"tags\": [\"hololive\", \"indonesian\", \"shrine maiden\"]\n  },\n  {\n    \"name\": \"Hakose Baelz\",\n    \"agency\": \"hololive English\",\n    \"debut_date\": \"2021-08-23\",\n    \"description\": \"The Avatar of Chaos, a chaotic squirrel-rat girl who is a hype energy streamer\",\n    \"image_url\": \"https://twitter.com/hakosbaelz/profile_image?size=original\",\n    \"youtube_channel\": \"@HakosBaelz\",\n    \"twitter_handle\": \"hakosbaelz\",\n    \"tags\": [\"hololive\", \"english\", \"chaos\", \"dancing\"]\n  },\n  {\n    \"name\": \"Nagi Rosa\",\n    \"agency\": \"PRISM\",\n    \"debut_date\": \"2022-07-16\",\n    \"description\": \"A refined and elegant vampire, part of the PRISM Project's 5th generation\",\n    \"image_url\": \"https://twitter.com/NagiRosa_VT/profile_image?size=original\",\n    \"youtube_channel\": \"@NagiRosa\",\n    \"twitter_handle\": \"NagiRosa_VT\",\n    \"tags\": [\"prism\", \"english\", \"vampire\"]\n  },\n  {\n    \"name\": \"Vox Akuma\",\n    \"agency\": \"NIJISANJI EN\",\n    \"debut_date\": \"2021-12-20\",\n    \"description\": \"A powerful demon from the Akuma clan, known for his deep voice and ASMR streams\",\n    \"image_url\": \"https://twitter.com/voxakuma/profile_image?size=original\",\n    \"youtube_channel\": \"@VoxAkuma\",\n    \"twitter_handle\": \"voxakuma\",\n    \"tags\": [\"nijisanji\", \"english\", \"demon\", \"asmr\"]\n  }\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}/vtubers/bulk",
+					"host": [
+						"{{api_url}}"
+					],
+					"path": [
+						"vtubers",
+						"bulk"
+					]
+				},
+				"description": "Create multiple VTubers in bulk (wrapped array format)"
+			},
+			"response": []
+		},
+		{
+			"name": "WIP  Batch Create VTubers (Direct Array)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n  {\n    \"name\": \"Neuro-sama\",\n    \"agency\": \"VShojo\",\n    \"debut_date\": \"2022-12-21\",\n    \"description\": \"An AI VTuber known for her advanced conversational abilities and playing games in real-time\",\n    \"image_url\": \"https://twitter.com/Neuro_sama/profile_image?size=original\",\n    \"youtube_channel\": \"@Neuro-sama\",\n    \"twitter_handle\": \"Neuro_sama\",\n    \"tags\": [\"vshojo\", \"ai\", \"gaming\", \"english\"]\n  },\n  {\n    \"name\": \"Camila\",\n    \"agency\": \"Mythic Talent\",\n    \"debut_date\": \"2022-07-10\",\n    \"description\": \"A silly and mischievous pink-haired imp who is a kind demon at heart\",\n    \"image_url\": \"https://twitter.com/cumilq/profile_image?size=original\",\n    \"youtube_channel\": \"@camila\",\n    \"twitter_handle\": \"cumilq\",\n    \"tags\": [\"mythic\", \"english\", \"imp\", \"variety\"]\n  },\n  {\n    \"name\": \"dooby3D\",\n    \"agency\": \"Independent\",\n    \"debut_date\": \"2024-10-25\",\n    \"description\": \"A jerboa (desert mouse) transformed into a humanoid train conductor after being struck by a shooting star\",\n    \"image_url\": \"https://twitter.com/dooby3D/profile_image?size=original\",\n    \"youtube_channel\": \"@dooby3D\",\n    \"twitter_handle\": \"dooby3D\",\n    \"tags\": [\"independent\", \"english\", \"jerboa\", \"gaming\"]\n  },\n  {\n    \"name\": \"Sameko Saba\",\n    \"agency\": \"Independent\",\n    \"debut_date\": \"2025-06-28\",\n    \"description\": \"A whimsical fish girl and lighthouse keeper. Set record for fastest VTuber to reach 1 million subscribers\",\n    \"image_url\": \"https://twitter.com/samekosaba/profile_image?size=original\",\n    \"youtube_channel\": \"@samekosaba\",\n    \"twitter_handle\": \"samekosaba\",\n    \"tags\": [\"independent\", \"english\", \"fish\", \"lighthouse\"]\n  },\n  {\n    \"name\": \"Filian\",\n    \"agency\": \"Independent\",\n    \"debut_date\": \"2021-06-16\",\n    \"description\": \"A cat-ered VTuber known for high-energy humor, variety gaming, and creative content\",\n    \"image_url\": \"https://twitter.com/Filian/profile_image?size=original\",\n    \"youtube_channel\": \"@Filian\",\n    \"twitter_handle\": \"Filian\",\n    \"tags\": [\"independent\", \"english\", \"cat\", \"variety\"]\n  },\n  {\n    \"name\": \"Mori Calliope\",\n    \"agency\": \"hololive English\",\n    \"debut_date\": \"2020-09-12\",\n    \"description\": \"The Reaper's Apprentice and a talented rapper and musician from the underworld\",\n    \"image_url\": \"https://twitter.com/moricalliope/profile_image?size=original\",\n    \"youtube_channel\": \"@MoriCalliope\",\n    \"twitter_handle\": \"moricalliope\",\n    \"tags\": [\"hololive\", \"english\", \"reaper\", \"music\"]\n  },\n  {\n    \"name\": \"Ninomae Ina'nis\",\n    \"agency\": \"hololive English\",\n    \"debut_date\": \"2020-09-12\",\n    \"description\": \"A gentle priestess of the Ancient Ones, an artist known for her calm takodachi community\",\n    \"image_url\": \"https://twitter.com/ninomaeinanis/profile_image?size=original\",\n    \"youtube_channel\": \"@NinomaeInanis\",\n    \"twitter_handle\": \"ninomaeinanis\",\n    \"tags\": [\"hololive\", \"english\", \"tako\", \"art\"]\n  },\n  {\n    \"name\": \"Takanashi Kiara\",\n    \"agency\": \"hololive English\",\n    \"debut_date\": \"2020-09-12\",\n    \"description\": \"A phoenix who owns a fast-food chain, fluent in English, German, and Japanese\",\n    \"image_url\": \"https://twitter.com/takanashikiara/profile_image?size=original\",\n    \"youtube_channel\": \"@TakanashiKiara\",\n    \"twitter_handle\": \"takanashikiara\",\n    \"tags\": [\"hololive\", \"english\", \"phoenix\", \"idol\"]\n  },\n  {\n    \"name\": \"Amelia Watson\",\n    \"agency\": \"hololive English\",\n    \"debut_date\": \"2020-09-13\",\n    \"description\": \"A detective from a timeline, a time-traveler who investigates mysteries and plays games\",\n    \"image_url\": \"https://twitter.com/watsonameliaEN/profile_image?size=original\",\n    \"youtube_channel\": \"@WatsonAmelia\",\n    \"twitter_handle\": \"watsonameliaEN\",\n    \"tags\": [\"hololive\", \"english\", \"detective\", \"gaming\"]\n  },\n  {\n    \"name\": \"Shirakami Fubuki\",\n    \"agency\": \"hololive Japan\",\n    \"debut_date\": \"2018-06-01\",\n    \"description\": \"A friend-making fox, one of hololive's most recognizable and outgoing members\",\n    \"image_url\": \"https://twitter.com/shirakamifubuki/profile_image?size=original\",\n    \"youtube_channel\": \"@ShirakamiFubuki\",\n    \"twitter_handle\": \"shirakamifubuki\",\n    \"tags\": [\"hololive\", \"japanese\", \"fox\", \"gaming\"]\n  },\n  {\n    \"name\": \"Houshou Marine\",\n    \"agency\": \"hololive Japan\",\n    \"debut_date\": \"2020-08-01\",\n    \"description\": \"The Horny Captain, an otaku known for her love of anime, manga, and energetic personality\",\n    \"image_url\": \"https://twitter.com/houshoumarine/profile_image?size=original\",\n    \"youtube_channel\": \"@houshoumarine\",\n    \"twitter_handle\": \"houshoumarine\",\n    \"tags\": [\"hololive\", \"japanese\", \"pirate\", \"idol\"]\n  },\n  {\n    \"name\": \"Kizuna AI\",\n    \"agency\": \"Kizuna AI Inc.\",\n    \"debut_date\": \"2016-11-29\",\n    \"description\": \"The Original VTuber who popularized the concept, a super AI wanting to connect with everyone\",\n    \"image_url\": \"https://twitter.com/aichan_nel/profile_image?size=original\",\n    \"youtube_channel\": \"@AIChannel\",\n    \"twitter_handle\": \"aichan_nel\",\n    \"tags\": [\"kizuna ai\", \"japanese\", \"ai\", \"pioneer\"]\n  },\n  {\n    \"name\": \"Kaguya Luna\",\n    \"agency\": \"Independent\",\n    \"debut_date\": \"2017-12-04\",\n    \"description\": \"One of the early pioneering VTubers, known for her hyperactive personality and iconic green pigtails\",\n    \"image_url\": \"https://twitter.com/kaguyalunach/profile_image?size=original\",\n    \"youtube_channel\": \"@kaguyalunach\",\n    \"twitter_handle\": \"kaguyalunach\",\n    \"tags\": [\"independent\", \"japanese\", \"pioneer\"]\n  },\n  {\n    \"name\": \"Ironmouse\",\n    \"agency\": \"VShojo\",\n    \"debut_date\": \"2020-07-13\",\n    \"description\": \"A charismatic demon queen from Chile, one of the most subscribed-to VTubers on Twitch\",\n    \"image_url\": \"https://twitter.com/ironmouse/profile_image?size=original\",\n    \"youtube_channel\": \"@Ironmouse\",\n    \"twitter_handle\": \"ironmouse\",\n    \"tags\": [\"vshojo\", \"english\", \"demon\", \"singing\"]\n  },\n  {\n    \"name\": \"Veibae\",\n    \"agency\": \"VShojo\",\n    \"debut_date\": \"2020-10-01\",\n    \"description\": \"A succubus known for her sarcastic, dry humor and distinctive voice\",\n    \"image_url\": \"https://twitter.com/Veibae/profile_image?size=original\",\n    \"youtube_channel\": \"@Veibae\",\n    \"twitter_handle\": \"Veibae\",\n    \"tags\": [\"vshojo\", \"english\", \"succubus\", \"art\"]\n  },\n  {\n    \"name\": \"Nyatasha Nyanners\",\n    \"agency\": \"VShojo\",\n    \"debut_date\": \"2020-07-13\",\n    \"description\": \"A cat girl known for her cute voice, singing, and long history in online content creation\",\n    \"image_url\": \"https://twitter.com/NyatashaNyanners/profile_image?size=original\",\n    \"youtube_channel\": \"@Nyanners\",\n    \"twitter_handle\": \"NyatashaNyanners\",\n    \"tags\": [\"vshojo\", \"english\", \"cat\", \"singing\"]\n  },\n  {\n    \"name\": \"Shylily\",\n    \"agency\": \"Independent\",\n    \"debut_date\": \"2021-10-29\",\n    \"description\": \"A lively orca-girl hybrid, known for her high-energy streams and strong community interaction\",\n    \"image_url\": \"https://twitter.com/shylily_/profile_image?size=original\",\n    \"youtube_channel\": \"@Shylily\",\n    \"twitter_handle\": \"shylily_\",\n    \"tags\": [\"independent\", \"english\", \"orca\", \"variety\"]\n  },\n  {\n    \"name\": \"Pikamee\",\n    \"agency\": \"VOMS\",\n    \"debut_date\": \"2019-10-03\",\n    \"description\": \"A beloved kettle-headed student, known for her infectious laughter and cheerful personality\",\n    \"image_url\": \"https://twitter.com/Pikamee_VOMs/profile_image?size=original\",\n    \"youtube_channel\": \"@Pikamee\",\n    \"twitter_handle\": \"Pikamee_VOMs\",\n    \"tags\": [\"voms\", \"japanese\", \"english\", \"kettle\"]\n  },\n  {\n    \"name\": \"Henya the Genius\",\n    \"agency\": \"VShojo\",\n    \"debut_date\": \"2024-01-20\",\n    \"description\": \"A self-proclaimed genius and the Number 1 VTuber, known for singing and comedic timing\",\n    \"image_url\": \"https://twitter.com/henyathegenius/profile_image?size=original\",\n    \"youtube_channel\": \"@HeynaTheGenius\",\n    \"twitter_handle\": \"henyathegenius\",\n    \"tags\": [\"vshojo\", \"english\", \"genius\", \"singing\"]\n  },\n  {\n    \"name\": \"Kobo Kanaeru\",\n    \"agency\": \"hololive Indonesia\",\n    \"debut_date\": \"2022-03-27\",\n    \"description\": \"A rainy shrine maiden and a loud, energetic, and chaotic rain shaman\",\n    \"image_url\": \"https://twitter.com/kobokanaeru/profile_image?size=original\",\n    \"youtube_channel\": \"@KoboKanaeru\",\n    \"twitter_handle\": \"kobokanaeru\",\n    \"tags\": [\"hololive\", \"indonesian\", \"shrine maiden\"]\n  },\n  {\n    \"name\": \"Hakose Baelz\",\n    \"agency\": \"hololive English\",\n    \"debut_date\": \"2021-08-23\",\n    \"description\": \"The Avatar of Chaos, a chaotic squirrel-rat girl who is a hype energy streamer\",\n    \"image_url\": \"https://twitter.com/hakosbaelz/profile_image?size=original\",\n    \"youtube_channel\": \"@HakosBaelz\",\n    \"twitter_handle\": \"hakosbaelz\",\n    \"tags\": [\"hololive\", \"english\", \"chaos\", \"dancing\"]\n  },\n  {\n    \"name\": \"Nagi Rosa\",\n    \"agency\": \"PRISM\",\n    \"debut_date\": \"2022-07-16\",\n    \"description\": \"A refined and elegant vampire, part of the PRISM Project's 5th generation\",\n    \"image_url\": \"https://twitter.com/NagiRosa_VT/profile_image?size=original\",\n    \"youtube_channel\": \"@NagiRosa\",\n    \"twitter_handle\": \"NagiRosa_VT\",\n    \"tags\": [\"prism\", \"english\", \"vampire\"]\n  },\n  {\n    \"name\": \"Vox Akuma\",\n    \"agency\": \"NIJISANJI EN\",\n    \"debut_date\": \"2021-12-20\",\n    \"description\": \"A powerful demon from the Akuma clan, known for his deep voice and ASMR streams\",\n    \"image_url\": \"https://twitter.com/voxakuma/profile_image?size=original\",\n    \"youtube_channel\": \"@VoxAkuma\",\n    \"twitter_handle\": \"voxakuma\",\n    \"tags\": [\"nijisanji\", \"english\", \"demon\", \"asmr\"]\n  }\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}/vtubers/batch",
+					"host": [
+						"{{api_url}}"
+					],
+					"path": [
+						"vtubers",
+						"batch"
+					]
+				},
+				"description": "Create multiple VTubers in batch (direct array format) - Use this for bulk adding all 50 VTubers"
+			},
+			"response": []
+		},
+		{
+			"name": "Update VTuber (Protected)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Gawr Gura\",\n    \"description\": \"A descendant of the Lost City of Atlantis, who swam to Earth while saying, 'It's so boring down there LOLOLOL!' She's known for her cute 'a' catchphrase and gaming streams.\",\n    \"tags\": [\"hololive\", \"english\", \"shark\", \"gaming\", \"minecraft\"]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_url}}/vtubers/{{vtuber_id}}",
+					"host": [
+						"{{api_url}}"
+					],
+					"path": [
+						"vtubers",
+						"{{vtuber_id}}"
+					]
+				},
+				"description": "Atualiza um VTuber existente (requer autenticação)"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete VTuber (Protected)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{api_url}}/vtubers/{{vtuber_id}}",
+					"host": [
+						"{{api_url}}"
+					],
+					"path": [
+						"vtubers",
+						"{{vtuber_id}}"
+					]
+				},
+				"description": "Deleta um VTuber (requer autenticação)"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Script pré-requisição (opcional)",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Testes comuns para todas as requisições",
+					""
+				]
+			}
+		}
+	]
+}
