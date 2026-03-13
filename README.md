@@ -1,100 +1,190 @@
-# VTuber Wiki API
+# 🎭 VTuber Wiki API
 
-## WARNING: ACADEMIC PROJECT ONLY
+> **📚 ACADEMIC PROJECT — For Educational Use Only**
 
-**IMPORTANT DISCLAIMER**: This is a college assignment project created for educational purposes only. It is not intended for production use and should not be considered reliable, secure, or suitable for real-world applications (I know it's not LOL).
+<div align="center">
+  
+  [![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com)
+  [![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com)
+  [![Python](https://img.shields.io/badge/Python-3.9+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+  [![License](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+  
+  <p><i>A comprehensive RESTful API serving as a public database for Virtual YouTuber (VTuber) profiles and agencies</i></p>
+  
+  **[Explore the Docs](#api-endpoints) • [Report Bug](https://github.com/stingy-namake/vtuber-api/issues) • [Request Feature](https://github.com/stingy-namake/vtuber-api/issues)**
 
-## Overview
+</div>
 
-The VTuber API is a RESTful web service built with FastAPI and Supabase that provides information about Virtual YouTubers (VTubers). This API serves as a public database for VTuber profiles, agencies, and related information. It was developed as a college assignment to demonstrate API development skills.
+---
 
-### Key Features
+## ⚠️ Important Disclaimer
 
-- **Public Read Access**: All GET endpoints are publicly accessible without authentication
-- **Protected Write Operations**: POST, PUT, and DELETE operations require Supabase authentication
-- **Comprehensive VTuber Data**: Store and retrieve detailed VTuber information including agencies, debut dates, social media links, and tags
-- **Search and Filtering**: Search VTubers by name or description, filter by agency
-- **Bulk Operations**: Support for creating multiple VTubers in a single request
+This project was developed **exclusively for academic purposes** as a college assignment to demonstrate API development skills. It is **not production-ready** and should not be deployed in real-world scenarios. The author acknowledges potential security vulnerabilities, reliability issues, and performance limitations.
 
-## Technology Stack
+---
 
-- **Backend**: FastAPI (Python)
-- **Database**: Supabase (PostgreSQL)
-- **Authentication**: Supabase Auth with JWT tokens
-- **Testing**: Postman collection for API testing
+## 🎯 Overview
 
-## API Endpoints
+The VTuber Wiki API provides structured access to information about Virtual YouTubers, their affiliated agencies, social media presence, and more. Built with modern technologies and best practices, this project showcases:
 
-### Public Endpoints (No Authentication Required)
+- ✅ **RESTful architecture** with proper HTTP semantics
+- ✅ **Role-based access control** (public read vs. protected write)
+- ✅ **Comprehensive CRUD operations** with bulk endpoints
+- ✅ **Advanced search and filtering** capabilities
+- ✅ **JWT authentication** for secure write operations
 
-- `GET /` - API documentation and available endpoints
-- `GET /health` - Health check endpoint
-- `GET /vtubers` - List all VTubers with pagination and filtering
-- `GET /vtubers/{id}` - Get specific VTuber by ID
-- `GET /search` - Search VTubers by name or description
-- `GET /agencies` - List all available agencies
+---
 
-### Protected Endpoints (Authentication Required)
+## ✨ Key Features
 
-- `POST /vtubers` - Create a single VTuber
-- `POST /vtubers/bulk` - Create multiple VTubers (wrapped array format)
-- `POST /vtubers/batch` - Create multiple VTubers (direct array format) -- This is a Work In Progress
-- `PUT /vtubers/{id}` - Update VTuber information
-- `DELETE /vtubers/{id}` - Delete a VTuber
+| Feature | Description |
+|---------|-------------|
+| 🔓 **Public Read Access** | All GET endpoints freely accessible without authentication |
+| 🔒 **Protected Write Operations** | POST, PUT, DELETE require valid Supabase JWT authentication |
+| 📊 **Comprehensive VTuber Data** | Store agency info, debut dates, social links, tags, and more |
+| 🔍 **Advanced Search** | Full-text search across names and descriptions with agency filtering |
+| 📦 **Bulk Operations** | Create multiple VTuber entries in a single request |
+| 🔄 **Pagination Support** | Efficiently browse through large datasets |
 
-## Testing Process
+---
+
+## 🛠️ Technology Stack
+
+<div align="center">
+  
+| | | |
+|---|---|---|
+| **Backend Framework** | [FastAPI](https://fastapi.tiangolo.com) | High-performance Python async framework |
+| **Database** | [Supabase](https://supabase.com) | PostgreSQL with real-time capabilities |
+| **Authentication** | [Supabase Auth](https://supabase.com/auth) | JWT-based authentication system |
+| **API Testing** | [Postman](https://postman.com) | Comprehensive API testing suite |
+| **Deployment** | [Vercel](https://vercel.com) / [Render](https://render.com) | Serverless-ready deployment |
+
+</div>
+
+---
+
+## 📋 API Endpoints
+
+### Public Routes (No Authentication Required)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/` | Interactive API documentation |
+| `GET` | `/health` | Service health check |
+| `GET` | `/vtubers` | List all VTubers (paginated) |
+| `GET` | `/vtubers/{id}` | Retrieve specific VTuber |
+| `GET` | `/search` | Full-text search across VTubers |
+| `GET` | `/agencies` | List all unique agencies |
+
+### Protected Routes (Authentication Required)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/vtubers` | Create a single VTuber |
+| `POST` | `/vtubers/bulk` | Create multiple VTubers (wrapped array) |
+| `POST` | `/vtubers/batch` | ⚠️ WIP — Batch creation (direct array) |
+| `PUT` | `/vtubers/{id}` | Update VTuber information |
+| `DELETE` | `/vtubers/{id}` | Remove VTuber from database |
+
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
 
-1. **Supabase Account**: Set up a Supabase project with a `vtubers` table
-2. **Environment Setup**: Configure your environment variables
-3. **Postman**: Install Postman for API testing
+- Python 3.9+
+- Supabase account with a `vtubers` table
+- Postman (for testing)
 
-### Environment Configuration
+### Quick Setup
 
-Create a Postman environment with the following variables:
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/stingy-namake/vtuber-api.git
+   cd vtuber-api
+   ```
 
-- `api_url`: API base URL (e.g., `http://localhost:8000`)
-- `supabase_url`: Your Supabase project URL
-- `api_key`: Your Supabase anon/public key
-- `access_token`: Will be populated after user authentication
-- `user_id`: Will be populated after user authentication
-- `vtuber_id`: Will be populated after creating a VTuber
+2. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-### Step-by-Step Testing Guide
+3. **Configure environment variables**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your Supabase credentials
+   ```
 
-#### Step 1: Test Public Endpoints
+4. **Run the development server**
+   ```bash
+   uvicorn main:app --reload
+   ```
 
-1. **API Root**: Verify the API is running by calling `GET /`
-2. **Health Check**: Confirm service status with `GET /health`
-3. **List VTubers**: Test `GET /vtubers` to see existing data (initially empty)
+---
 
-#### Step 2: Set Up Authentication
+## 🧪 Testing Guide
 
-1. **Create User Account**: Use the User Auth collection to create a new user
-2. **Login**: Authenticate to obtain an access token
-3. **Verify Token**: The access token will be automatically saved to your environment
+### Postman Environment Setup
 
-#### Step 3: Test Protected Endpoints
+Create a Postman environment with these variables:
 
-1. **Create Single VTuber**: Use `POST /vtubers` to add one VTuber
-2. **Verify Creation**: Check `GET /vtubers` to confirm the VTuber was added
-3. **Update VTuber**: Use `PUT /vtubers/{id}` to modify VTuber data
-4. **Test Search**: Use `GET /search?q=name` to search for VTubers
-5. **List Agencies**: Use `GET /agencies` to see all agencies
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `api_url` | API base URL | `http://localhost:8000` |
+| `supabase_url` | Your Supabase URL | `https://xyz.supabase.co` |
+| `api_key` | Supabase anon key | `eyJhbGciOiJIUzI1NiIs...` |
+| `access_token` | JWT token (auto-filled) | — |
+| `user_id` | Authenticated user ID | — |
+| `vtuber_id` | Created VTuber ID | — |
 
-#### Step 4: Bulk Operations
+### Testing Workflow
 
-1. **Bulk Create**: Use `POST /vtubers/bulk` with wrapped array format
-2. **Batch Create**: Use `POST /vtubers/batch` with direct array format (recommended for large datasets) -- WIP
-3. **Verify Bulk Data**: Check all VTubers were created successfully
+<details>
+<summary><b>📌 Step 1: Verify Public Endpoints</b></summary>
 
-#### Step 5: Cleanup (Optional)
+- `GET /` — Confirm API is running
+- `GET /health` — Check service status
+- `GET /vtubers` — Verify database connection
+</details>
 
-1. **Delete VTubers**: Use `DELETE /vtubers/{id}` to remove test data
-2. **Logout**: Use the logout endpoint to invalidate the token
+<details>
+<summary><b>🔐 Step 2: Authentication Setup</b></summary>
 
-### Sample VTuber Data Structure
+- Create user account via Supabase Auth
+- Login to obtain access token
+- Token auto-populates in environment
+</details>
+
+<details>
+<summary><b>✍️ Step 3: Test Protected Operations</b></summary>
+
+- Create single VTuber with `POST /vtubers`
+- Verify creation with `GET /vtubers`
+- Update data with `PUT /vtubers/{id}`
+- Test search functionality
+</details>
+
+<details>
+<summary><b>📦 Step 4: Bulk Operations</b></summary>
+
+- Use `POST /vtubers/bulk` for wrapped array format
+- ⚠️ Test `POST /vtubers/batch` (WIP)
+- Verify all entries were created
+</details>
+
+<details>
+<summary><b>🧹 Step 5: Cleanup</b></summary>
+
+- Delete test data with `DELETE /vtubers/{id}`
+- Logout to invalidate token
+</details>
+
+---
+
+## 📊 Data Model
+
+### VTuber Object Schema
 
 ```json
 {
@@ -111,27 +201,65 @@ Create a Postman environment with the following variables:
 
 ### Database Schema
 
-The `vtubers` table should have the following structure:
+| Column | Type | Required | Description |
+|--------|------|----------|-------------|
+| `id` | UUID | ✅ | Primary key |
+| `name` | VARCHAR | ✅ | VTuber name |
+| `agency` | VARCHAR | ❌ | Agency affiliation |
+| `debut_date` | DATE | ❌ | Debut date |
+| `description` | TEXT | ❌ | VTuber biography |
+| `image_url` | TEXT | ❌ | Profile image |
+| `youtube_channel` | TEXT | ❌ | YouTube channel ID |
+| `twitter_handle` | VARCHAR | ❌ | Twitter/X handle |
+| `tags` | TEXT[] | ❌ | Categorization tags |
+| `created_at` | TIMESTAMP | ✅ | Auto-generated |
+| `updated_at` | TIMESTAMP | ✅ | Auto-updated |
 
-- `id` (UUID, Primary Key)
-- `name` (VARCHAR, Required)
-- `agency` (VARCHAR, Optional)
-- `debut_date` (DATE, Optional)
-- `description` (TEXT, Optional)
-- `image_url` (TEXT, Optional)
-- `youtube_channel` (TEXT, Optional)
-- `twitter_handle` (VARCHAR, Optional)
-- `tags` (TEXT[], Optional)
-- `created_at` (TIMESTAMP)
-- `updated_at` (TIMESTAMP)
+---
 
-### Error Handling
+## 🔄 Error Handling
 
-The API returns appropriate HTTP status codes:
+The API follows standard HTTP status code conventions:
 
-- `200` - Success
-- `201` - Resource created
-- `400` - Bad request
-- `401` - Unauthorized
-- `404` - Resource not found
-- `500` - Internal server error
+| Code | Meaning | Description |
+|------|---------|-------------|
+| `200` | Success | Request processed successfully |
+| `201` | Created | Resource successfully created |
+| `400` | Bad Request | Malformed request syntax |
+| `401` | Unauthorized | Missing or invalid authentication |
+| `404` | Not Found | Resource doesn't exist |
+| `500` | Internal Error | Server-side failure |
+
+---
+
+## 🤝 Contributing
+
+While this is an academic project, contributions for educational purposes are welcome!
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+---
+
+## 📬 Contact
+
+Project Link: [https://github.com/stingy-namake/vtuber-api](https://github.com/stingy-namake/vtuber-api)
+
+---
+
+<div align="center">
+  
+  **⭐ Star this repository if you find it useful for learning! ⭐**
+  
+  <sub>Built with ❤️ for educational purposes | College Assignment Project</sub>
+  
+</div>
